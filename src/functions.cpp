@@ -16,7 +16,9 @@ namespace functions {
         if (file.is_open()) {
             string line;
             while (getline(file, line)) {
-                output.push_back(line);
+                if (!line.empty()) {
+                    output.push_back(line);
+                }
             }    
         } else {
             cerr << "Error opening file \"" << file_name << "\"";
