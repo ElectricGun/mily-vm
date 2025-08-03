@@ -1,0 +1,24 @@
+set fact_input 10
+set factorial 1
+set i 2
+for_loop_start_0:
+  op mul factorial factorial i
+op add i i 1
+jump for_loop_start_0 lessThanEq i fact_input
+set x_ 0
+set i 0
+for_loop_start_1:
+  set j 0
+  for_loop_start_2:
+    set k j
+    while_loop_start_3:
+      op add k k 1
+      op add x_ x_ 1
+    jump while_loop_start_3 lessThan k 100
+  op add j j 1
+  op sub l_r_for 100 i
+  op add r_for l_r_for x_
+  jump for_loop_start_2 lessThan j r_for
+op add i i 1
+jump for_loop_start_1 lessThan i 100
+end
