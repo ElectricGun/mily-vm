@@ -7,16 +7,7 @@
 
 using namespace std;
 
-namespace executor {
-    struct GlobalVar {
-        string value = "";
-    };
+namespace mily {
 
-    struct ActiveVar {
-        string type = TYPE_DOUBLE;
-        double double_value = 0;
-        bool is_null = true;
-    };
-
-    void execute(vector<string> code, bool verbose);
+    void execute(vector<string>& code, bool verbose, bool benchmark);
 }

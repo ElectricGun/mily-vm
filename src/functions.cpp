@@ -6,9 +6,16 @@
 #include "headers/constants.h"
 
 using namespace std;
-using namespace functions;
+using namespace mily;
 
-namespace functions {
+namespace mily {
+
+    bool is_numeric(string line) {
+        char* p;
+        strtol(line.c_str(), &p, 10);
+        return *p == 0;
+    }
+
     vector<string> load_file(string file_name) {
         ifstream file(file_name);
         vector<string> output;

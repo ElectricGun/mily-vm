@@ -7,11 +7,10 @@
 #include "headers/executor.h"
 
 using namespace std;
-using namespace functions;
-using namespace executor;
+using namespace mily;
 
 static const vector<string> single_flags {
-    "-v"
+    "-v", "-bm"
 };
 
 bool is_flag(string arg) {
@@ -32,7 +31,7 @@ int main(int argc, char* argv[]) {
         if (is_flag(arg)) {
             if (flag_mode) {
                 cerr << "Invalid argument \"" << arg << "\"";
-                exit (EXIT_FAILURE);
+                exit(EXIT_FAILURE);
 
             } else {
                 if (count(single_flags.begin(), single_flags.end(), arg)) {
@@ -53,26 +52,37 @@ int main(int argc, char* argv[]) {
             
         } else {
             cerr << "Invalid argument \"" << arg << "\"";
-            exit (EXIT_FAILURE);
+            exit(EXIT_FAILURE);
         }
     }
 
     if (flag_mode) {
         cerr << "Missing argument value after flag" << endl;
-        exit (EXIT_FAILURE);
+        exit(EXIT_FAILURE);
     }
 
     // process arguments
+    // todo: this is inefficient
     bool verbose = false;
-    for (auto& x : flags) {
-        cout << x.first << "  " << x.second << endl;
-        
+    bool benchmark = false;
+    for (auto& x : flags) {        
         if (x.first == "-v") {
             if (x.second == "0") {
                 verbose = false;
             
             } else if (x.second == "1") {
                 verbose = true;
+
+            } else {
+                cerr << "Unexpected value after flag \"" << x.first << "\"" << endl;
+                exit(EXIT_FAILURE);
+            }
+        } else if (x.first == "-bm") {
+            if (x.second == "0") {
+                benchmark = false;
+            
+            } else if (x.second == "1") {
+                benchmark = true;
 
             } else {
                 cerr << "Unexpected value after flag \"" << x.first << "\"" << endl;
@@ -85,7 +95,7 @@ int main(int argc, char* argv[]) {
     map<string, JumpTarget> jump_table = make_jump_table(code);
     vector<string> code_processed = prepare_code(code, jump_table);
 
-    execute(code_processed, verbose);
+    execute(code_processed, verbose, benchmark);
 
     return 0;
 }

@@ -8,7 +8,8 @@
 
 using namespace std;
 
-namespace functions {
+namespace mily {
+    
     struct Node {
         int value = -1;
     };
@@ -17,6 +18,8 @@ namespace functions {
         int line_number = 0;
         int delete_offset = 0;
     };
+
+    bool is_numeric(string line);
 
     vector<string> load_file(string file_name);
 

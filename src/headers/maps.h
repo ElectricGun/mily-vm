@@ -5,11 +5,13 @@
 #include <string>
 #include "constants.h"
 #include "functions.h"
+#include "execfuncs.h"
 
 using namespace std;
-using namespace functions;
+using namespace mily;
 
-namespace maps {
+namespace mily {
+
     static map<string, Node> token_map = {
         {"end", Node{0}},
         {"set", Node{1}},
@@ -49,4 +51,21 @@ namespace maps {
         {OP_MOD, 
             [](double a, double b) {return fmod(a, b);}}
     };
+
+    static map<string, function<void(int&, bool&, string&, map<string, GlobalVar>&)>> instruction_map {
+        {KEY_END, [](int& c, bool& dc, string& ls, map<string, GlobalVar>& avm){
+            c = 0;
+            dc = true;
+        }},
+        {KEY_JUMP, [](int& c, bool& dc, string& ls, map<string, GlobalVar>& avm){
+            jump(c, ls, avm);
+            dc = true;
+        }},
+        {KEY_SET, [](int& c, bool& dc, string& ls, map<string, GlobalVar>& avm){
+            set(ls, avm);
+        }},
+        {KEY_OP, [](int& c, bool& dc, string& ls, map<string, GlobalVar>& avm){
+            operate(ls, avm);
+        }}
+    }; 
 }
