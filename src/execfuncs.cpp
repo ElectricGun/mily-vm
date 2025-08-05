@@ -1,3 +1,5 @@
+#include <iostream>
+#include <sstream>
 #include <string>
 #include "headers/execfuncs.hpp"
 #include "headers/maps.hpp"

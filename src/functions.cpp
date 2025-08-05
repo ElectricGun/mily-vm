@@ -1,6 +1,7 @@
 #include <map>
 #include <vector>
 #include <sstream>
+#include <fstream>
 #include <iostream>
 #include "headers/functions.hpp"
 #include "headers/constants.hpp"
