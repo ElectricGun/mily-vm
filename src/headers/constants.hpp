@@ -1,6 +1,6 @@
 #pragma once
 
-#include "functions.h"
+#include "functions.hpp"
 #include <string>
 
 using namespace std;

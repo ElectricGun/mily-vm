@@ -2,8 +2,8 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include "headers/functions.h"
-#include "headers/constants.h"
+#include "headers/functions.hpp"
+#include "headers/constants.hpp"
 
 using namespace std;
 using namespace mily;

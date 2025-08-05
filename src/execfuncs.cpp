@@ -1,6 +1,6 @@
 #include <string>
-#include "headers/execfuncs.h"
-#include "headers/maps.h"
+#include "headers/execfuncs.hpp"
+#include "headers/maps.hpp"
 
 using namespace std;
 using namespace mily;

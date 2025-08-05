@@ -3,8 +3,8 @@
 #include <sstream>
 #include <string>
 #include <iostream>
-#include "headers/execfuncs.h"
-#include "headers/executor.h"
+#include "headers/execfuncs.hpp"
+#include "headers/executor.hpp"
 
 using namespace std;
 using namespace mily;

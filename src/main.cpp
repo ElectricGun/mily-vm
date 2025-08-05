@@ -3,8 +3,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "headers/functions.h"
-#include "headers/executor.h"
+#include "headers/functions.hpp"
+#include "headers/executor.hpp"
 
 using namespace std;
 using namespace mily;

@@ -3,9 +3,9 @@
 #include <cmath>
 #include <functional>
 #include <string>
-#include "constants.h"
-#include "functions.h"
-#include "execfuncs.h"
+#include "constants.hpp"
+#include "functions.hpp"
+#include "execfuncs.hpp"
 
 using namespace std;
 using namespace mily;
