@@ -8,10 +8,14 @@ using namespace std;
 namespace mily {
     
     static const string 
+        // instruction mnemonics
         KEY_JUMP = "jump",
         KEY_OP = "op",
         KEY_SET = "set",
         KEY_END = "end",
+        KEY_STOP = "stop",
+        KEY_PRINT = "print",
+        KEY_PRINTFLUSH = "printflush",
 
         // operators
         OP_ADD = "add",

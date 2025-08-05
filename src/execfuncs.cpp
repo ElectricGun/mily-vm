@@ -109,4 +109,11 @@ namespace mily {
         
         active_var_map[var_name] = GlobalVar{overwrite_value};
     }
+
+    void forward(int& counter, int max_lines) {
+        counter++;
+        if (counter >= max_lines) {
+            counter = 0;
+        }
+    }
 }

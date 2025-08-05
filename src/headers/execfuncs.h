@@ -26,4 +26,6 @@ namespace mily {
     void jump(int& counter, string& line, map<string, GlobalVar>& active_var_map);
 
     void set(string& line, map<string, GlobalVar>& active_var_map);
+
+    void forward(int& counter, int max_lines);
 }
