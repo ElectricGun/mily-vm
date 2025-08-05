@@ -3,7 +3,9 @@
 #include <sstream>
 #include <string>
 #include <iostream>
+#include "headers/constants.hpp"
 #include "headers/execfuncs.hpp"
+#include "headers/functions.hpp"
 #include "headers/executor.hpp"
 
 using namespace std;
@@ -31,7 +33,7 @@ namespace mily {
         }}
     }; 
     
-    void execute(vector<string>& code, bool verbose, bool benchmark) {
+    void execute(vector<Line>& code, bool verbose, bool benchmark) {
         map<string, GlobalVar> active_var_map;
         double memory[512];
 
@@ -42,11 +44,12 @@ namespace mily {
 
         chrono::steady_clock::time_point begin = chrono::steady_clock::now();        
         while ((benchmark ? iteration < 1000000 : true) && active) {
-            string line_string = code[counter];
+            Line line = code[counter];
+            string line_string = line.value;
             stringstream line_stream(line_string);
             
             if (verbose) {
-                cout << "ITERATION: " << iteration << "  LINE: " << counter <<  "\n" << line_string << endl;
+                cout << "ITERATION: " << iteration << "  LINE: " << line.line << "  COUNTER: " << counter <<  "\n" << line_string << endl;
                 cout << endl << "VARIABLES:" << endl;
                 for (auto& entry : active_var_map) {
                     cout << entry.first << ": " << entry.second.value << endl;

@@ -17,13 +17,18 @@ namespace mily {
         int delete_offset = 0;
     };
 
+    struct Line {
+        string value;
+        int line;
+    };
+
     bool is_numeric(string line);
 
-    vector<string> load_file(string file_name);
+    vector<Line> load_file(string file_name);
 
-    map<string, JumpTarget> make_jump_table(vector<string>& code);
+    map<string, JumpTarget> make_jump_table(vector<Line>& code);
 
-    vector<string> prepare_code(vector<string> &code, map<string, JumpTarget> &jump_table);
+    vector<Line> prepare_code(vector<Line> &code, map<string, JumpTarget> &jump_table);
 
-    vector<string> prepare_code(vector<string>& code, map<string, JumpTarget>& jump_table, bool do_delete_labels);
+    vector<Line> prepare_code(vector<Line>& code, map<string, JumpTarget>& jump_table, bool do_delete_labels);
 }

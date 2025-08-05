@@ -72,7 +72,7 @@ namespace mily {
         }
 
         if (overwrite == VAR_COUNTER) {
-            counter = (int) out_value - 1;
+            counter = (int) out_value;
             return;
         }
 
@@ -122,7 +122,7 @@ namespace mily {
         struct ActiveVar overwrite_var = get_active_var(counter, value, active_var_map);
 
         if (var_name == VAR_COUNTER) {
-            counter = (int) overwrite_var.double_value - 1;
+            counter = (int) overwrite_var.double_value;
             return;
         }
         string overwrite_value = overwrite_var.is_null ? "" : to_string(overwrite_var.double_value);

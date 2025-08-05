@@ -1,11 +1,11 @@
 #pragma once
 
-#include <string>
+#include "functions.hpp"
 #include <vector>
 
 using namespace std;
 
 namespace mily {
 
-    void execute(vector<string>& code, bool verbose, bool benchmark);
+    void execute(vector<Line>& code, bool verbose, bool benchmark);
 }

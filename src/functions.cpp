@@ -1,4 +1,5 @@
 #include <map>
+#include <string>
 #include <vector>
 #include <sstream>
 #include <fstream>
@@ -17,16 +18,36 @@ namespace mily {
         return *p == 0;
     }
 
-    vector<string> load_file(string file_name) {
+    vector<Line> load_file(string file_name) {
         ifstream file(file_name);
-        vector<string> output;
+        vector<Line> output;
         
         if (file.is_open()) {
+
+            int line_number = 0;
             string line;
             while (getline(file, line)) {
+                bool comment_mode = false;
+                string new_line;
+                stringstream line_stream(line);
                 if (!line.empty()) {
-                    output.push_back(line);
+                    string word;
+                    while (line_stream >> word) {
+                        if (!word.compare(0, KEY_COMMENT.size(), KEY_COMMENT)) {
+                            comment_mode = true;
+                            continue;
+                        
+                        } else if (!comment_mode) {
+                            new_line.append(word + " ");
+                        } 
+                    }
+                    if (new_line.length() > 0) {
+                        // cout << new_line << endl;
+                        struct Line line_struct{new_line, line_number};
+                        output.push_back(line_struct);
+                    }
                 }
+                line_number ++;
             }    
         } else {
             cerr << "Error opening file \"" << file_name << "\"";
@@ -35,12 +56,13 @@ namespace mily {
         return output;
     }
 
-    map<string, JumpTarget> make_jump_table(vector<string>& code) {
+    map<string, JumpTarget> make_jump_table(vector<Line>& code) {
         int line_number = 0;
         int jump_offset = 0;
         map<string, JumpTarget> jump_map;
 
-        for (string& line : code) {
+        for (Line& line_struct : code) {
+            string line = line_struct.value;
             stringstream line_stream(line);
 
             string word;
@@ -71,16 +93,18 @@ namespace mily {
         return jump_map;
     }
 
-    vector<string> prepare_code(vector<string> &code, map<string, JumpTarget> &jump_table) {
+    vector<Line> prepare_code(vector<Line> &code, map<string, JumpTarget> &jump_table) {
         return prepare_code(code, jump_table, true);
     }
 
-    vector<string> prepare_code(vector<string>& code, map<string, JumpTarget>& jump_table, bool do_delete_labels) {
-        vector<string> new_code;
+    vector<Line> prepare_code(vector<Line>& code, map<string, JumpTarget>& jump_table, bool do_delete_labels) {
+        vector<Line> new_code;
 
         int line_number = 0;
-        for (string& line : code) {
+        for (Line& line_struct : code) {
+            string line = line_struct.value;
             stringstream line_stream(line);
+
             string new_line = "";
             
             bool is_jump = false;
@@ -106,7 +130,7 @@ namespace mily {
                 word_number++;
             }
             if (!new_line.empty()) {
-                new_code.push_back(new_line);
+                new_code.push_back(Line{new_line, line_struct.line});
             }
             line_number++;
         }

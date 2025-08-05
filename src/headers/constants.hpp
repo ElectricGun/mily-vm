@@ -15,6 +15,7 @@ namespace mily {
         KEY_STOP = "stop",
         KEY_PRINT = "print",
         KEY_PRINTFLUSH = "printflush",
+        KEY_COMMENT = "#",
 
         // vars
         VAR_COUNTER = "@counter",
