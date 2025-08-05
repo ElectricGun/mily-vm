@@ -1,7 +1,7 @@
 # MilyVM
 An mlog emulator written in C++
 
-# Build
+# Building
 ## Linux:
 1. gcc is required, but is most likely already installed
 2. Run bash.sh
