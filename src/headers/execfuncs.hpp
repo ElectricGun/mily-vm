@@ -20,13 +20,13 @@ namespace mily {
 
     bool compare(ActiveVar left, string comparator, ActiveVar right);
 
-    ActiveVar get_active_var(string& token, map<string, GlobalVar>& active_var_map);
+    ActiveVar get_active_var(int& counter, string& token, map<string, GlobalVar>& active_var_map);
 
-    void operate(string& line, map<string, GlobalVar>& active_var_map);
+    void operate(int& counter, string& line, map<string, GlobalVar>& active_var_map);
 
     void jump(int& counter, string& line, map<string, GlobalVar>& active_var_map);
 
-    void set(string& line, map<string, GlobalVar>& active_var_map);
+    void set(int& counter, string& line, map<string, GlobalVar>& active_var_map);
 
     void forward(int& counter, int max_lines);
 }

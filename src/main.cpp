@@ -93,6 +93,9 @@ int main(int argc, char* argv[]) {
 
     vector<string> code = load_file(file_name);
     map<string, JumpTarget> jump_table = make_jump_table(code);
+    // for (auto l : jump_table) {
+    //     cout << l.first << " -> " << l.second.line_number << " + " << l.second.delete_offset << endl;
+    // }
     vector<string> code_processed = prepare_code(code, jump_table);
 
     execute(code_processed, verbose, benchmark);

@@ -1,9 +1,12 @@
-set n 5
-set curr n
-set i 1
-for_loop_start_0:
-  op mul curr curr i
-op add i i 1
-jump for_loop_start_0 lessThan i n
-set result curr
+jump test_3_end always
+  test_3_start:
+  op add l_test_return x y
+  op add test_3_returns l_test_return z
+  set @counter test_3_callback
+test_3_end:
+set x 1
+set y 2
+set z 3
+op add test_3_callback @counter 2
+jump test_3_start always
 stop

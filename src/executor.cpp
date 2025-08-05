@@ -19,11 +19,11 @@ namespace mily {
             jump(c, ls, avm);
         }},
         {KEY_SET, [](int& c, int maxl, bool& a, string& ls, map<string, GlobalVar>& avm){
-            set(ls, avm);
+            set(c, ls, avm);
             forward(c, maxl);
         }},
         {KEY_OP, [](int& c, int maxl, bool& a, string& ls, map<string, GlobalVar>& avm){
-            operate(ls, avm);
+            operate(c, ls, avm);
             forward(c, maxl);
         }},
         {KEY_STOP, [](int& c, int maxl, bool& a, string& ls, map<string, GlobalVar>& avm){
@@ -46,8 +46,8 @@ namespace mily {
             stringstream line_stream(line_string);
             
             if (verbose) {
-                cout << "ITERATION: " << iteration << endl;
-                cout << "LINE: " << counter <<  "\n" << line_string << endl;    
+                cout << "ITERATION: " << iteration << "  LINE: " << counter <<  "\n" << line_string << endl;
+                cout << endl << "VARIABLES:" << endl;
                 for (auto& entry : active_var_map) {
                     cout << entry.first << ": " << entry.second.value << endl;
                 }

@@ -16,6 +16,9 @@ namespace mily {
         KEY_PRINT = "print",
         KEY_PRINTFLUSH = "printflush",
 
+        // vars
+        VAR_COUNTER = "@counter",
+
         // operators
         OP_ADD = "add",
         OP_MUL = "mul",
