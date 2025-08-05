@@ -7,5 +7,5 @@ using namespace std;
 
 namespace mily {
 
-    void execute(vector<Line>& code, bool verbose, bool benchmark);
+    void execute(vector<Line>& code, bool verbose, bool benchmark, bool limit);
 }

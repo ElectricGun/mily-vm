@@ -129,6 +129,66 @@ namespace mily {
         active_var_map[var_name] = GlobalVar{overwrite_value};
     }
 
+    void print_buffer(int& counter, string& line, string& printbuffer, map<string, GlobalVar>& active_var_map) {
+        bool iterated = false;
+        bool string_open = false;
+        bool string_started = false;
+        bool string_closed = false;
+
+        // trim
+        line.erase(line.find_last_not_of(' ') + 1);
+        line.erase(0, line.find_first_not_of(' '));
+
+        string buffer;
+        string target_var;
+        string prev_str;
+        // this can be improved to be more efficient, but it doesnt seem to hinder speed too much right now
+        for (int i = 6; i < line.length(); i++) {
+            string str(1, line[i]);
+
+            if (string_started && string_closed) {
+                printbuffer.append("null");
+                return;
+
+            } else if (str == PUNC_SPEECH) {
+                if (!string_started) {
+                    string_started = true;
+                    string_open = true;
+                
+                } else if ((iterated && !string_started)) {
+                    printbuffer.append("null");
+                    return;
+                
+                } else if (string_open) {
+                    string_closed = true;
+                }
+            } else {
+                if (str == "n" && prev_str == "\\") {
+                    buffer.pop_back();
+                    buffer.push_back('\n');
+                } else {
+                    buffer.push_back(line[i]);
+                }
+            }
+            prev_str = str;
+            iterated = true;
+        }
+
+        if (string_started) {
+            printbuffer.append(buffer);
+        
+        } else {
+            struct ActiveVar active_var = get_active_var(counter, buffer, active_var_map);
+            if (active_var.is_null) {
+                printbuffer.append("null");
+                return;
+            } else {
+                printbuffer.append(to_string(active_var.double_value));
+                return;
+            }
+        }
+    }
+
     void forward(int& counter, int max_lines) {
         counter++;
         if (counter >= max_lines) {

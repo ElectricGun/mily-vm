@@ -10,7 +10,7 @@ using namespace std;
 using namespace mily;
 
 static const vector<string> single_flags {
-    "-v", "-bm"
+    "-v", "-bm", "--benchmark", "--limit"
 };
 
 bool is_flag(string arg) {
@@ -62,10 +62,11 @@ int main(int argc, char* argv[]) {
     }
 
     // process arguments
-    // todo: this is inefficient
     bool verbose = false;
     bool benchmark = false;
+    bool limit = false;
     for (auto& x : flags) {        
+        // todo: this is inefficient
         if (x.first == "-v") {
             if (x.second == "0") {
                 verbose = false;
@@ -77,7 +78,7 @@ int main(int argc, char* argv[]) {
                 cerr << "Unexpected value after flag \"" << x.first << "\"" << endl;
                 exit(EXIT_FAILURE);
             }
-        } else if (x.first == "-bm") {
+        } else if (x.first == "-bm" || x.first == "--benchmark") {
             if (x.second == "0") {
                 benchmark = false;
             
@@ -88,8 +89,20 @@ int main(int argc, char* argv[]) {
                 cerr << "Unexpected value after flag \"" << x.first << "\"" << endl;
                 exit(EXIT_FAILURE);
             }
+        } else if (x.first == "--limit") {
+            if (x.second == "0") {
+                limit = false;
+            
+            } else if (x.second == "1") {
+                limit = true;
+
+            } else {
+                cerr << "Unexpected value after flag \"" << x.first << "\"" << endl;
+                exit(EXIT_FAILURE);
+            }
         }
     }
+
 
     vector<Line> code = load_file(file_name);
     map<string, JumpTarget> jump_table = make_jump_table(code);
@@ -98,7 +111,7 @@ int main(int argc, char* argv[]) {
     // }
     vector<Line> code_processed = prepare_code(code, jump_table);
 
-    execute(code_processed, verbose, benchmark);
+    execute(code_processed, verbose, benchmark, limit);
 
     return 0;
 }

@@ -69,9 +69,10 @@ namespace mily {
 
             bool found_label = false;
             bool is_label_one_liner = false;
+            bool not_label = false;
 
             while (line_stream >> word) {
-                if (word.back() == ':') {
+                if (word.back() == ':' && !not_label) {
                     found_label = true;
                     is_label_one_liner = true;
 
@@ -80,8 +81,11 @@ namespace mily {
                         JumpTarget{line_number, jump_offset}
                     });
 
-                } else if (found_label) {
+                } else {
+                    not_label = true;
+                    if (found_label) {
                     is_label_one_liner = false;
+                    }
                 }
             }
             if (found_label && is_label_one_liner) {
@@ -108,14 +112,16 @@ namespace mily {
             string new_line = "";
             
             bool is_jump = false;
+            bool not_label = false;
             int word_number = 0;
             string word;
             while (line_stream >> word) {
-                if (word.back() == ':') {
+                if (word.back() == ':' && !not_label) {
                     if (!do_delete_labels) {
                         new_line.append(word);
                     }
                 } else {
+                    not_label = true;
                     if (word == KEY_JUMP) {
                         is_jump = true;
                         new_line.append(word + " ");

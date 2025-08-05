@@ -17,6 +17,9 @@ namespace mily {
         KEY_PRINTFLUSH = "printflush",
         KEY_COMMENT = "#",
 
+        // puncs
+        PUNC_SPEECH = "\"",
+
         // vars
         VAR_COUNTER = "@counter",
 

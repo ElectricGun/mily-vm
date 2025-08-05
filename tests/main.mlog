@@ -1,23 +1,67 @@
+# function: print_0
+jump print_0_end always
+print_0_start:
+print_0_end:
+# function: printflush_0
+jump printflush_0_end always
+printflush_0_start:
+printflush_0_end:
 # function: test_3
 jump test_3_end always
 test_3_start:
-  op add l_test_return x y
-  op add test_3_returns l_test_return z
+  # function: test2_1
+  jump test2_1_end always
+  test2_1_start:
+    # function: test3_1
+    jump test3_1_end always
+    test3_1_start:
+      op add l_test3_return x x_
+      op add test3_1_returns l_test3_return x__
+      set @counter test3_1_callback
+    test3_1_end:
+    # call: test3_1
+    set x__ x
+    op add test3_1_callback @counter 1
+    jump test3_1_start always
+    set test3_1_returns_0 test3_1_returns
+    op add test2_1_returns test3_1_returns_0 x_
+    set @counter test2_1_callback
+  test2_1_end:
+  # call: test2_1
+  op add l_x x y
+  op add x_ l_x z
+  op add test2_1_callback @counter 1
+  jump test2_1_start always
+  set test2_1_returns_1 test2_1_returns
+  set test_3_returns test2_1_returns_1
   set @counter test_3_callback
 test_3_end:
-# call: test_3
-set x 3
-set y 3
-set z 3
-op add test_3_callback @counter 1
-jump test_3_start always
-set test_3_returns_0 test_3_returns
-# call: test_3
-set x 1
-set y 2
-set z 3
-op add test_3_callback @counter 1
-jump test_3_start always
-set test_3_returns_1 test_3_returns
-op add sus test_3_returns_0 test_3_returns_1
+# function: _test_0
+jump _test_0_end always
+_test_0_start:
+  # call: test_3
+  set x 3
+  set y 3
+  set z 3
+  op add test_3_callback @counter 1
+  jump test_3_start always
+  set test_3_returns_2 test_3_returns
+  # call: test_3
+  set x 1
+  set y 2
+  set z 3
+  op add test_3_callback @counter 1
+  jump test_3_start always
+  set test_3_returns_3 test_3_returns
+  op add _test_0_returns test_3_returns_2 test_3_returns_3
+  set @counter _test_0_callback
+_test_0_end:
+# call: _test_0
+op add _test_0_callback @counter 1
+jump _test_0_start always
+set _test_0_returns_4 _test_0_returns
+set output _test_0_returns_4
+print "result: "
+print output
+printflush message1
 stop

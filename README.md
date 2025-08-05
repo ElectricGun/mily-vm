@@ -13,4 +13,5 @@ An mlog emulator written in C++
 2. run `./milyvm <file.mlog>`, e.g. `./milyvm ../tests/main.mlog`
 ## Run Flags
 - `-v` - Verbose mode. Prints out the state of execution: variable states and the current line. Slows down execution by a large amount.
-- `-bm` - Benchmark mode. Limits execution to 1 million instructions for measuring speed.
+- `--limit` - Limits execution to 1 million instructions.
+- `-bm`, `--benchmark` - Benchmark. Prints performance after a complete execution.
