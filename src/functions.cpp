@@ -6,6 +6,7 @@
 #include <iostream>
 #include "headers/functions.hpp"
 #include "headers/constants.hpp"
+#include "headers/maps.hpp"
 
 using namespace std;
 using namespace mily;
@@ -142,5 +143,28 @@ namespace mily {
         }
 
         return new_code;
+    }
+
+    vector<Instruction> prepare_code_instructions(vector<Line>& code) {
+        vector<Instruction> output;
+
+        for (Line line : code) {
+            stringstream line_stream(line.value);
+
+            string instruction;
+            line_stream >> instruction;
+
+            int instruction_id = token_map[instruction].value;
+            
+            vector<string> content;
+            string word;
+            while (line_stream >> word) {
+                content.push_back(word);
+            }
+
+            output.push_back(Instruction{line.line, instruction_id, content});
+        }
+
+        return output;
     }
 }

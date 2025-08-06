@@ -103,15 +103,23 @@ int main(int argc, char* argv[]) {
         }
     }
 
-
     vector<Line> code = load_file(file_name);
     map<string, JumpTarget> jump_table = make_jump_table(code);
     // for (auto l : jump_table) {
     //     cout << l.first << " -> " << l.second.line_number << " + " << l.second.delete_offset << endl;
     // }
     vector<Line> code_processed = prepare_code(code, jump_table);
+    vector<Instruction> instructions = prepare_code_instructions(code_processed);
 
-    execute(code_processed, verbose, benchmark, limit);
+    // for (Instruction ins : instructions) {
+    //     string out;
+    //     for (string s : ins.content) {
+    //         out.append(s).append(" ");
+    //     }
+    //     cout << ins.line << ": " << ins.line << " " << out << endl;
+    // }
+
+    execute(instructions, verbose, benchmark, limit);
 
     return 0;
 }

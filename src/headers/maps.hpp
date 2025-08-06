@@ -13,9 +13,12 @@ namespace mily {
 
     static map<string, Node> token_map = {
         {"end", Node{0}},
-        {"set", Node{1}},
-        {"op", Node{2}},
-        {"jump", Node{3}}
+        {"jump", Node{1}},
+        {"set", Node{2}},
+        {"op", Node{3}},
+        {"stop", Node{4}},
+        {"print", Node{5}},
+        {"printflush", Node{6}}
     };
 
     static map<string, function<bool(double, double)>> double_compare_map {

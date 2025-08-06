@@ -45,14 +45,11 @@ namespace mily {
         return out;
     }
 
-    void operate(int& counter, string& line, map<string, GlobalVar>& active_var_map) {
-        string name;
-        string op;
-        string overwrite;
-        string left;
-        string right;
-        stringstream line_stream(line);
-        line_stream >> name >> op >> overwrite >> left >> right;
+    void operate(int& counter, vector<string>& line, map<string, GlobalVar>& active_var_map) {
+        string op = line[0];
+        string overwrite = line[1];
+        string left = line[2];
+        string right = line[3];
 
         struct GlobalVar out;
         struct ActiveVar left_var = get_active_var(counter, left, active_var_map);
@@ -82,19 +79,17 @@ namespace mily {
         active_var_map[overwrite] = out;
     }
 
-    void jump(int& counter, string& line, map<string, GlobalVar>& active_var_map) {
-        string name;
-        int target;
-        string op;
-        string left;
-        string right;
-        istringstream stream(line);
-        stream >> name >> target >> op >> left >> right;
+    void jump(int& counter, vector<string>& line, map<string, GlobalVar>& active_var_map) {
+        int target = stoi(line[0]);
+        string op = line[1];
 
         if (op == KEY_ALWAYS) {
             counter = target;
             return;
         }
+
+        string left = line[2];
+        string right = line[3];
 
         struct ActiveVar left_var = get_active_var(counter, left, active_var_map);
         struct ActiveVar right_var = get_active_var(counter, right, active_var_map);
@@ -113,12 +108,9 @@ namespace mily {
         }
     }
 
-    void set(int& counter, string& line, map<string, GlobalVar>& active_var_map) {
-        stringstream line_stream(line);
-        string name;
-        string var_name; 
-        string value;
-        line_stream >> name >> var_name >> value;
+    void set(int& counter, vector<string>& line, map<string, GlobalVar>& active_var_map) {
+        string var_name = line[0]; 
+        string value = line[1];
         struct ActiveVar overwrite_var = get_active_var(counter, value, active_var_map);
 
         if (var_name == VAR_COUNTER) {
@@ -129,22 +121,27 @@ namespace mily {
         active_var_map[var_name] = GlobalVar{overwrite_value};
     }
 
-    void print_buffer(int& counter, string& line, string& printbuffer, map<string, GlobalVar>& active_var_map) {
+    void print_buffer(int& counter, vector<string>& line, string& printbuffer, map<string, GlobalVar>& active_var_map) {
         bool iterated = false;
         bool string_open = false;
         bool string_started = false;
         bool string_closed = false;
 
-        // trim
-        line.erase(line.find_last_not_of(' ') + 1);
-        line.erase(0, line.find_first_not_of(' '));
-
+        string input_str;
+        int size = line.size();
+        for (int i = 0; i < size; i++) {
+            input_str.append(line[i]);
+            if (i < size - 1) {
+                input_str.push_back(' ');
+            }
+        }
+        
         string buffer;
         string target_var;
         string prev_str;
         // this can be improved to be more efficient, but it doesnt seem to hinder speed too much right now
-        for (int i = 6; i < line.length(); i++) {
-            string str(1, line[i]);
+        for (int i = 0; i < input_str.length(); i++) {
+            string str(1, input_str[i]);
 
             if (string_started && string_closed) {
                 printbuffer.append("null");
@@ -167,7 +164,7 @@ namespace mily {
                     buffer.pop_back();
                     buffer.push_back('\n');
                 } else {
-                    buffer.push_back(line[i]);
+                    buffer.push_back(input_str[i]);
                 }
             }
             prev_str = str;

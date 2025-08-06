@@ -13,42 +13,39 @@ using namespace mily;
 
 namespace mily {
 
-    static map<string, function<void(int&, int, bool&, string&, string&, map<string, GlobalVar>&)>> execution_map {
-        {KEY_END, [](int& c, int maxl, bool& a, string& pb, string& ls, map<string, GlobalVar>& avm){
+    static function<void(int&, int, bool&, string&, vector<string>&, map<string, GlobalVar>&)> execution_map[] {
+        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, GlobalVar>& avm){
             c = maxl;
             forward(c, maxl);
         }},
-        {KEY_JUMP, [](int& c, int maxl, bool& a, string& pb, string& ls, map<string, GlobalVar>& avm){
+        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, GlobalVar>& avm){
             jump(c, ls, avm);
         }},
-        {KEY_SET, [](int& c, int maxl, bool& a, string& pb, string& ls, map<string, GlobalVar>& avm){
+        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, GlobalVar>& avm){
             forward(c, maxl);
             set(c, ls, avm);
         }},
-        {KEY_OP, [](int& c, int maxl, bool& a, string& pb, string& ls, map<string, GlobalVar>& avm){
+        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, GlobalVar>& avm){
             forward(c, maxl);
             operate(c, ls, avm);
         }},
-        {KEY_STOP, [](int& c, int maxl, bool& a, string& pb, string& ls, map<string, GlobalVar>& avm){
+        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, GlobalVar>& avm){
             a = false;
         }},
-        {KEY_PRINT, [](int& c, int maxl, bool& a, string& pb, string& ls, map<string, GlobalVar>& avm){
+        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, GlobalVar>& avm){
             forward(c, maxl);
             print_buffer(c, ls, pb, avm);
         }},
-        {KEY_PRINTFLUSH, [](int& c, int maxl, bool& a, string& pb, string& ls, map<string, GlobalVar>& avm){
+        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, GlobalVar>& avm){
             forward(c, maxl);
-            string name;
             // TODO: target doesnt do anything
-            string target;
-            stringstream line_stream(ls);
-            line_stream >> name >> target;
+            string target = ls[0];
             cout << pb << endl;
             pb = "";
         }}
     }; 
     
-    void execute(vector<Line>& code, bool verbose, bool benchmark, bool limit) {
+    void execute(vector<Instruction>& code, bool verbose, bool benchmark, bool limit) {
         map<string, GlobalVar> active_var_map;
         double memory[512];
 
@@ -62,22 +59,26 @@ namespace mily {
 
         chrono::steady_clock::time_point begin = chrono::steady_clock::now();        
         while ((limit ? iteration < 1000000 : true) && active) {
-            Line line = code[counter];
-            string line_string = line.value;
-            stringstream line_stream(line_string);
+            Instruction instruction = code[counter];
+            int instruction_id = instruction.id;
+            vector<string> content = instruction.content;
             
             if (verbose) {
+                string out = to_string(instruction_id) + " ";
+                for (string s : instruction.content) {
+                    out.append(s).append(" ");
+                }
+                cout << instruction.line << ": " << instruction.line << " " << out << endl;
                 cout << endl;
-                cout << "ITERATION: " << iteration << "  LINE: " << line.line << "  COUNTER: " << counter <<  "\n" << line_string << endl;
+                cout << "ITERATION: " << iteration << "  LINE: " << instruction.line << "  COUNTER: " << counter <<  "\n" << out << endl;
                 cout << endl << "VARIABLES:" << endl;
                 for (auto& entry : active_var_map) {
                     cout << entry.first << ": " << entry.second.value << endl;
                 }
                 cout << thingy << endl;
             }
-            string word;
-            line_stream >> word;
-            execution_map[word](counter, MAX_LINE, active, printbuffer, line_string, active_var_map);
+            
+            execution_map[instruction_id](counter, MAX_LINE, active, printbuffer, content, active_var_map);
             iteration ++;
         }
 

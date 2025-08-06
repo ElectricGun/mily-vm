@@ -22,6 +22,12 @@ namespace mily {
         int line;
     };
 
+    struct Instruction {
+        int line;
+        int id;
+        vector<string> content;
+    };
+
     bool is_numeric(string line);
 
     vector<Line> load_file(string file_name);
@@ -31,4 +37,6 @@ namespace mily {
     vector<Line> prepare_code(vector<Line> &code, map<string, JumpTarget> &jump_table);
 
     vector<Line> prepare_code(vector<Line>& code, map<string, JumpTarget>& jump_table, bool do_delete_labels);
+
+    vector<Instruction> prepare_code_instructions(vector<Line>& code);
 }
