@@ -26,20 +26,20 @@ namespace mily {
         return false;
     }
 
-    ActiveVar parse_active_var(int& counter, string& token, map<string, ActiveVar>& active_var_map) {
+    ActiveVar parse_to_active_var(int& counter, string& token, map<string, ActiveVar>& active_var_map) {
         struct ActiveVar out;
 
         if (token == VAR_COUNTER) {
             out.double_value = counter;
-            out.is_null = false;
+            out.type = TYPE_DOUBLE;
         
         } else if (is_numeric(token)) {
             out.double_value = stod(token);
-            out.is_null = false;
+            out.type = TYPE_DOUBLE;
         
         } else if (active_var_map[token].type == TYPE_DOUBLE) {
             out.double_value = active_var_map[token].double_value;
-            out.is_null = false;
+            out.type = TYPE_DOUBLE;
         }
         return out;
     }
@@ -51,12 +51,8 @@ namespace mily {
         string& right = line[3];
 
         struct ActiveVar out;
-        struct ActiveVar left_var = parse_active_var(counter, left, active_var_map);
-        struct ActiveVar right_var = parse_active_var(counter, right, active_var_map);
-
-        // cout << "OPERATION: " << overwrite << endl;
-        // cout << (left_var.is_null ? "null" : "double: " + to_string(left_var.double_value)) << endl;
-        // cout << (right_var.is_null ? "null" : "double: " + to_string(right_var.double_value)) << endl;
+        struct ActiveVar left_var = parse_to_active_var(counter, left, active_var_map);
+        struct ActiveVar right_var = parse_to_active_var(counter, right, active_var_map);
 
         double out_value;
         if (left_var.type == right_var.type) {
@@ -72,10 +68,8 @@ namespace mily {
             return;
         }
 
-        // cout << "RESULT: " << out_value << endl;
-
         out.double_value = out_value;
-        out.is_null = false;
+        out.type = TYPE_DOUBLE;
         active_var_map[overwrite] = out;
     }
 
@@ -90,12 +84,8 @@ namespace mily {
 
         string& left = line[2];
         string& right = line[3];
-        struct ActiveVar left_var = parse_active_var(counter, left, active_var_map);
-        struct ActiveVar right_var = parse_active_var(counter, right, active_var_map);
-
-        // cout << "JUMP" << endl;
-        // cout << (left_var.is_null ? "null" : "double: " + to_string(left_var.double_value)) << endl;
-        // cout << (right_var.is_null ? "null" : "double: " + to_string(right_var.double_value)) << endl;
+        struct ActiveVar left_var = parse_to_active_var(counter, left, active_var_map);
+        struct ActiveVar right_var = parse_to_active_var(counter, right, active_var_map);
 
         if (compare(left_var, op, right_var)) {
             counter = target;
@@ -108,7 +98,7 @@ namespace mily {
     void set(int& counter, vector<string>& line, map<string, ActiveVar>& active_var_map) {
         string& var_name = line[0]; 
         string& value = line[1];
-        struct ActiveVar overwrite_var = parse_active_var(counter, value, active_var_map);
+        struct ActiveVar overwrite_var = parse_to_active_var(counter, value, active_var_map);
 
         if (var_name == VAR_COUNTER) {
             counter = (int) overwrite_var.double_value;
@@ -135,7 +125,7 @@ namespace mily {
         string buffer;
         string target_var;
         string prev_str;
-        // this can be improved to be more efficient, but it doesnt seem to hinder speed too much right now
+        // TODO: this can be improved to be more efficient
         for (int i = 0; i < input_str.length(); i++) {
             string str(1, input_str[i]);
 
@@ -171,8 +161,8 @@ namespace mily {
             printbuffer.append(buffer);
         
         } else {
-            struct ActiveVar active_var = parse_active_var(counter, buffer, active_var_map);
-            if (active_var.is_null) {
+            struct ActiveVar active_var = parse_to_active_var(counter, buffer, active_var_map);
+            if (active_var.type == TYPE_NULL) {
                 printbuffer.append("null");
                 return;
             } else {

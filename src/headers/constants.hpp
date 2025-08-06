@@ -41,9 +41,13 @@ namespace mily {
 
         KEY_ALWAYS = "always",
         KEY_TRUE = "true",
-        KEY_FALSE = "false",
+        KEY_FALSE = "false"
+        ;
 
-        TYPE_DOUBLE = "double",
-        TYPE_STRING = "string"
+    static const int
+
+        TYPE_DOUBLE = 0,
+        TYPE_STRING = 1,
+        TYPE_NULL = 2
         ;
 }
