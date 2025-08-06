@@ -10,7 +10,7 @@ using namespace mily;
 
 namespace mily {
 
-    bool compare(ActiveVar left, string comparator, ActiveVar right) {
+    bool compare(ActiveVar& left, string& comparator, ActiveVar& right) {
 
         // TODO: this makes it strictequal which might not be good
         if (left.type != right.type) {
@@ -26,7 +26,7 @@ namespace mily {
         return false;
     }
 
-    ActiveVar get_active_var(int& counter, string& token, map<string, GlobalVar>& active_var_map) {
+    ActiveVar parse_active_var(int& counter, string& token, map<string, ActiveVar>& active_var_map) {
         struct ActiveVar out;
 
         if (token == VAR_COUNTER) {
@@ -37,22 +37,22 @@ namespace mily {
             out.double_value = stod(token);
             out.is_null = false;
         
-        } else if (!active_var_map[token].value.empty()) {
-            out.double_value = stod(active_var_map[token].value);
+        } else if (active_var_map[token].type == TYPE_DOUBLE) {
+            out.double_value = active_var_map[token].double_value;
             out.is_null = false;
         }
         return out;
     }
 
-    void operate(int& counter, vector<string>& line, map<string, GlobalVar>& active_var_map) {
-        string op = line[0];
-        string overwrite = line[1];
-        string left = line[2];
-        string right = line[3];
+    void operate(int& counter, vector<string>& line, map<string, ActiveVar>& active_var_map) {
+        string& op = line[0];
+        string& overwrite = line[1];
+        string& left = line[2];
+        string& right = line[3];
 
-        struct GlobalVar out;
-        struct ActiveVar left_var = get_active_var(counter, left, active_var_map);
-        struct ActiveVar right_var = get_active_var(counter, right, active_var_map);
+        struct ActiveVar out;
+        struct ActiveVar left_var = parse_active_var(counter, left, active_var_map);
+        struct ActiveVar right_var = parse_active_var(counter, right, active_var_map);
 
         // cout << "OPERATION: " << overwrite << endl;
         // cout << (left_var.is_null ? "null" : "double: " + to_string(left_var.double_value)) << endl;
@@ -74,24 +74,24 @@ namespace mily {
 
         // cout << "RESULT: " << out_value << endl;
 
-        out.value = to_string(out_value);
+        out.double_value = out_value;
+        out.is_null = false;
         active_var_map[overwrite] = out;
     }
 
-    void jump(int& counter, vector<string>& line, map<string, GlobalVar>& active_var_map) {
+    void jump(int& counter, vector<string>& line, map<string, ActiveVar>& active_var_map) {
         int target = stoi(line[0]);
-        string op = line[1];
+        string& op = line[1];
 
         if (op == KEY_ALWAYS) {
             counter = target;
             return;
         }
 
-        string left = line[2];
-        string right = line[3];
-
-        struct ActiveVar left_var = get_active_var(counter, left, active_var_map);
-        struct ActiveVar right_var = get_active_var(counter, right, active_var_map);
+        string& left = line[2];
+        string& right = line[3];
+        struct ActiveVar left_var = parse_active_var(counter, left, active_var_map);
+        struct ActiveVar right_var = parse_active_var(counter, right, active_var_map);
 
         // cout << "JUMP" << endl;
         // cout << (left_var.is_null ? "null" : "double: " + to_string(left_var.double_value)) << endl;
@@ -99,28 +99,25 @@ namespace mily {
 
         if (compare(left_var, op, right_var)) {
             counter = target;
-            // cout << "RESULT: " << "true" << endl;
 
         } else {
-            // cout << "RESULT: " << "false" << endl;
             counter++;
         }
     }
 
-    void set(int& counter, vector<string>& line, map<string, GlobalVar>& active_var_map) {
-        string var_name = line[0]; 
-        string value = line[1];
-        struct ActiveVar overwrite_var = get_active_var(counter, value, active_var_map);
+    void set(int& counter, vector<string>& line, map<string, ActiveVar>& active_var_map) {
+        string& var_name = line[0]; 
+        string& value = line[1];
+        struct ActiveVar overwrite_var = parse_active_var(counter, value, active_var_map);
 
         if (var_name == VAR_COUNTER) {
             counter = (int) overwrite_var.double_value;
             return;
         }
-        string overwrite_value = overwrite_var.is_null ? "" : to_string(overwrite_var.double_value);
-        active_var_map[var_name] = GlobalVar{overwrite_value};
+        active_var_map[var_name] = overwrite_var;
     }
 
-    void print_buffer(int& counter, vector<string>& line, string& printbuffer, map<string, GlobalVar>& active_var_map) {
+    void print_buffer(int& counter, vector<string>& line, string& printbuffer, map<string, ActiveVar>& active_var_map) {
         bool iterated = false;
         bool string_open = false;
         bool string_started = false;
@@ -174,7 +171,7 @@ namespace mily {
             printbuffer.append(buffer);
         
         } else {
-            struct ActiveVar active_var = get_active_var(counter, buffer, active_var_map);
+            struct ActiveVar active_var = parse_active_var(counter, buffer, active_var_map);
             if (active_var.is_null) {
                 printbuffer.append("null");
                 return;
@@ -187,8 +184,6 @@ namespace mily {
 
     void forward(int& counter, int max_lines) {
         counter++;
-        if (counter >= max_lines) {
-            counter = 0;
-        }
+        counter %= max_lines;
     }
 }
