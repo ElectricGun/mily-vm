@@ -1,6 +1,5 @@
 #include <cstdlib>
 #include <iostream>
-#include <sstream>
 #include <string>
 #include "headers/execfuncs.hpp"
 #include "headers/constants.hpp"
@@ -135,7 +134,7 @@ namespace mily {
                 input_str.push_back(' ');
             }
         }
-        
+
         string buffer;
         string target_var;
         string prev_str;
