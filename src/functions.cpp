@@ -160,17 +160,22 @@ namespace mily {
             int j = 0;
             string word;
             while (line_stream >> word) {
+                struct Token token;
                 // assume first word is an int because its a jump
                 if (instruction_id == token_map[KEY_JUMP].value && j == 0) {
-                    content.push_back(Token{TYPE_INT, stoi(word)});
+                    token.type = TYPE_INT;
+                    token.int_value = stoi(word);
+                    content.push_back(token);
                 
                 }else if (is_numeric(word)) {
-                    struct Token token = Token{TYPE_DOUBLE};
+                    token.type = TYPE_DOUBLE;
                     token.double_value = stod(word);
                     content.push_back(token);
                 
                 } else {
-                    content.push_back(Token{TYPE_STRING, 0, word});
+                    token.type = TYPE_STRING;
+                    token.string_value = word;
+                    content.push_back(token);
                 }
                 j++;
             }
