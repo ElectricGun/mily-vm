@@ -45,9 +45,9 @@ namespace mily {
         ;
 
     static const int
-
         TYPE_DOUBLE = 0,
         TYPE_STRING = 1,
-        TYPE_NULL = 2
+        TYPE_NULL = 2,
+        TYPE_INT = 3
         ;
 }

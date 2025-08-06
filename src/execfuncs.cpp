@@ -1,9 +1,11 @@
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <vector>
 #include "headers/execfuncs.hpp"
 #include "headers/constants.hpp"
 #include "headers/maps.hpp"
+#include "headers/functions.hpp"
 
 using namespace std;
 using namespace mily;
@@ -26,29 +28,34 @@ namespace mily {
         return false;
     }
 
-    ActiveVar parse_to_active_var(int& counter, string& token, map<string, ActiveVar>& active_var_map) {
+    ActiveVar parse_to_active_var(int& counter, Token& token, map<string, ActiveVar>& active_var_map) {
         struct ActiveVar out;
 
-        if (token == VAR_COUNTER) {
+        if (token.type == TYPE_DOUBLE) {
+            out.double_value = token.double_value;
+            out.type = TYPE_DOUBLE;
+            return out;
+
+        } else if (token.string_value == VAR_COUNTER) {
             out.double_value = counter;
             out.type = TYPE_DOUBLE;
+            
+        } else if (active_var_map[token.string_value].type == TYPE_DOUBLE) {
+            return active_var_map[token.string_value];
         
-        } else if (is_numeric(token)) {
-            out.double_value = stod(token);
-            out.type = TYPE_DOUBLE;
-        
-        } else if (active_var_map[token].type == TYPE_DOUBLE) {
-            out.double_value = active_var_map[token].double_value;
-            out.type = TYPE_DOUBLE;
-        }
+        } else {
+            cerr << "Key not found in variable map: " << token.string_value << endl;
+        } 
         return out;
     }
 
-    void operate(int& counter, vector<string>& line, map<string, ActiveVar>& active_var_map) {
-        string& op = line[0];
-        string& overwrite = line[1];
-        string& left = line[2];
-        string& right = line[3];
+    void operate(int& counter, Instruction& instruction, map<string, ActiveVar>& active_var_map) {
+        vector<Token>& line = instruction.content;
+        string& op = line[0].string_value;
+        string& overwrite = line[1].string_value;
+
+        Token& left = line[2];
+        Token& right = line[3];
 
         struct ActiveVar out;
         struct ActiveVar left_var = parse_to_active_var(counter, left, active_var_map);
@@ -59,7 +66,10 @@ namespace mily {
             out_value = double_operation_map[op](left_var.double_value, right_var.double_value);
         
         } else {
-            cerr << "Type mismatch" << endl;
+            cerr << "Type mismatch" << " " << left_var.type << " " << right_var.type << " " << endl;
+            cerr << left_var.type << " " << right_var.type << endl;
+            cerr << left_var.double_value << " " << right_var.double_value << endl;
+
             exit(EXIT_FAILURE);
         }
 
@@ -73,17 +83,19 @@ namespace mily {
         active_var_map[overwrite] = out;
     }
 
-    void jump(int& counter, vector<string>& line, map<string, ActiveVar>& active_var_map) {
-        int target = stoi(line[0]);
-        string& op = line[1];
+    void jump(int& counter, Instruction& instruction, map<string, ActiveVar>& active_var_map) {
+        vector<Token>& line = instruction.content;
+
+        int target = line[0].int_value;
+        string& op = line[1].string_value;
 
         if (op == KEY_ALWAYS) {
             counter = target;
             return;
         }
 
-        string& left = line[2];
-        string& right = line[3];
+        Token& left = line[2];
+        Token& right = line[3];
         struct ActiveVar left_var = parse_to_active_var(counter, left, active_var_map);
         struct ActiveVar right_var = parse_to_active_var(counter, right, active_var_map);
 
@@ -95,19 +107,25 @@ namespace mily {
         }
     }
 
-    void set(int& counter, vector<string>& line, map<string, ActiveVar>& active_var_map) {
-        string& var_name = line[0]; 
-        string& value = line[1];
+    void set(int& counter, Instruction& instruction, map<string, ActiveVar>& active_var_map) {
+        vector<Token>& line = instruction.content;
+        string& var_name = line[0].string_value; 
+        
+        Token& value = line[1];
         struct ActiveVar overwrite_var = parse_to_active_var(counter, value, active_var_map);
 
         if (var_name == VAR_COUNTER) {
             counter = (int) overwrite_var.double_value;
             return;
         }
+        // cout << var_name << endl;
+
         active_var_map[var_name] = overwrite_var;
     }
 
-    void print_buffer(int& counter, vector<string>& line, string& printbuffer, map<string, ActiveVar>& active_var_map) {
+    void print_buffer(int& counter, Instruction& instruction, string& printbuffer, map<string, ActiveVar>& active_var_map) {
+        vector<Token>& line = instruction.content;
+
         bool iterated = false;
         bool string_open = false;
         bool string_started = false;
@@ -116,7 +134,7 @@ namespace mily {
         string input_str;
         int size = line.size();
         for (int i = 0; i < size; i++) {
-            input_str.append(line[i]);
+            input_str.append(line[i].string_value);
             if (i < size - 1) {
                 input_str.push_back(' ');
             }
@@ -161,7 +179,8 @@ namespace mily {
             printbuffer.append(buffer);
         
         } else {
-            struct ActiveVar active_var = parse_to_active_var(counter, buffer, active_var_map);
+            struct Token token = Token{TYPE_STRING, 0, buffer};
+            struct ActiveVar active_var = parse_to_active_var(counter, token, active_var_map);
             if (active_var.type == TYPE_NULL) {
                 printbuffer.append("null");
                 return;

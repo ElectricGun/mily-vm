@@ -2,6 +2,8 @@
 #include <functional>
 #include <string>
 #include <iostream>
+#include <vector>
+#include "headers/constants.hpp"
 #include "headers/execfuncs.hpp"
 #include "headers/functions.hpp"
 #include "headers/executor.hpp"
@@ -11,33 +13,34 @@ using namespace mily;
 
 namespace mily {
 
-    static function<void(int&, int&, bool&, string&, vector<string>&, map<string, ActiveVar>&)> execution_map[] {
-        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+    static function<void(int&, int&, bool&, string&, Instruction&, map<string, ActiveVar>&)> execution_map[] {
+        {[](int& c, int& maxl, bool& a, string& pb, Instruction& ls, map<string, ActiveVar>& avm){
             c = maxl;
             forward(c, maxl);
         }},
-        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, Instruction& ls, map<string, ActiveVar>& avm){
             jump(c, ls, avm);
         }},
-        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, Instruction& ls, map<string, ActiveVar>& avm){
             forward(c, maxl);
             set(c, ls, avm);
         }},
-        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, Instruction& ls, map<string, ActiveVar>& avm){
             forward(c, maxl);
             operate(c, ls, avm);
         }},
-        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, Instruction& ls, map<string, ActiveVar>& avm){
             a = false;
         }},
-        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, Instruction& ls, map<string, ActiveVar>& avm){
             forward(c, maxl);
             print_buffer(c, ls, pb, avm);
         }},
-        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, Instruction& ls, map<string, ActiveVar>& avm){
             forward(c, maxl);
             // TODO: target doesnt do anything
-            string& target = ls[0];
+            vector<Token>& line = ls.content;
+            string& target = line[0].string_value;
             cout << target << ": " << pb << endl;
             pb = "";
         }}
@@ -61,14 +64,24 @@ namespace mily {
         while ((limit ? iteration < limit_amount : true) && active) {
             Instruction& instruction = code[counter];
             int& instruction_id = instruction.id;
-            vector<string>& content = instruction.content;
+            vector<Token>& content = instruction.content;
             
             if (verbose) {
                 string out = to_string(instruction_id) + " ";
-                for (string s : instruction.content) {
-                    out.append(s).append(" ");
+                for (Token s : instruction.content) {
+                    if (s.type == TYPE_STRING)
+                        out.append(s.string_value).append(" ");
+                    
+                    else if (s.type == TYPE_DOUBLE)
+                        out.append(to_string(s.double_value)).append(" ");
+
+                    else if (s.type == TYPE_INT)
+                        out.append(to_string(s.int_value)).append(" ");
+
+                    else if (s.type == TYPE_NULL)
+                        out.append("null").append(" ");
                 }
-                cout << instruction.line << ": " << instruction.line << " " << out << endl;
+                // cout << instruction.line << ": " << instruction.line << " " << out << endl;
                 cout << endl;
                 cout << "ITERATION: " << iteration << "  LINE: " << instruction.line << "  COUNTER: " << counter <<  "\n" << out << endl;
                 cout << endl << "VARIABLES:" << endl;
@@ -78,7 +91,7 @@ namespace mily {
                 cout << thingy << endl;
             }
             
-            execution_map[instruction_id](counter, MAX_LINE, active, printbuffer, content, active_var_map);
+            execution_map[instruction_id](counter, MAX_LINE, active, printbuffer, instruction, active_var_map);
             iteration ++;
         }
         // time end

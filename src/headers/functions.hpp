@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include "constants.hpp"
 
 using namespace std;
 
@@ -22,10 +23,25 @@ namespace mily {
         int line;
     };
 
+    struct ActiveVar {
+        int type = TYPE_NULL;
+        int int_value;
+        double double_value;
+    };
+
+    struct Token {
+        int type = TYPE_NULL;
+        union {
+            int int_value;
+            double double_value;
+        };
+        string string_value;
+    };
+
     struct Instruction {
         int line;
         int id;
-        vector<string> content;
+        vector<Token> content;
     };
 
     bool is_numeric(string line);

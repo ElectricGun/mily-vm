@@ -156,13 +156,30 @@ namespace mily {
 
             int instruction_id = token_map[instruction].value;
             
-            vector<string> content;
+            vector<Token> content;
+            int j = 0;
             string word;
             while (line_stream >> word) {
-                content.push_back(word);
+                // assume first word is an int because its a jump
+                if (instruction_id == token_map[KEY_JUMP].value && j == 0) {
+                    content.push_back(Token{TYPE_INT, stoi(word)});
+                
+                }else if (is_numeric(word)) {
+                    struct Token token = Token{TYPE_DOUBLE};
+                    token.double_value = stod(word);
+                    content.push_back(token);
+                
+                } else {
+                    content.push_back(Token{TYPE_STRING, 0, word});
+                }
+                j++;
             }
-
-            output.push_back(Instruction{line.line, instruction_id, content});
+            output.push_back(Instruction{
+                    line.line, 
+                    instruction_id, 
+                    content
+                }
+            );
         }
 
         return output;

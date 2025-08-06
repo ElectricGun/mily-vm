@@ -12,13 +12,34 @@ using namespace mily;
 namespace mily {
 
     static map<string, Node> token_map = {
-        {"end", Node{0}},
-        {"jump", Node{1}},
-        {"set", Node{2}},
-        {"op", Node{3}},
-        {"stop", Node{4}},
-        {"print", Node{5}},
-        {"printflush", Node{6}}
+        {KEY_END, Node{0}},
+        {KEY_JUMP, Node{1}},
+        {KEY_SET, Node{2}},
+        {KEY_OP, Node{3}},
+        {KEY_STOP, Node{4}},
+        {KEY_PRINT, Node{5}},
+        {KEY_PRINTFLUSH, Node{6}}
+    };
+
+    static map<string, Node> comparison_map = {
+        {COMPARE_OP_EQUALS, Node{0}},
+        {COMPARE_NOT_EQUAL, Node{1}},
+        {COMPARE_LESS_THAN, Node{2}},
+        {COMPARE_LESS_THAN_EQUALS, Node{3}},
+        {COMPARE_GREATER_THAN, Node{4}},
+        {COMPARE_GREATER_THAN_EQUALS, Node{5}},
+        {COMPARE_STRICT_EQUALS, Node{6}}
+        
+    };
+
+    static map<string, Node> operator_map = {
+        {OP_ADD,  Node{0}},
+        {OP_MUL,  Node{1}},
+        {OP_SUB,  Node{2}},
+        {OP_DIV,  Node{3}},
+        {OP_IDIV, Node{4}},
+        {OP_MOD,  Node{5}},
+        
     };
 
     static map<string, function<bool(double, double)>> double_compare_map {
