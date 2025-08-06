@@ -9,6 +9,8 @@
 using namespace std;
 using namespace mily;
 
+// TODO: make arg parsing better
+
 static const vector<string> single_flags {
     "-v", "-bm", "--benchmark", "--limit"
 };
@@ -66,7 +68,7 @@ int main(int argc, char* argv[]) {
     bool benchmark = false;
     bool limit = false;
     for (auto& x : flags) {        
-        // todo: this is inefficient
+        // TODO: this is inefficient
         if (x.first == "-v") {
             if (x.second == "0") {
                 verbose = false;
