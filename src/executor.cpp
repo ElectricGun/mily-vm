@@ -43,7 +43,7 @@ namespace mily {
         }}
     }; 
     
-    void execute(vector<Instruction>& code, bool verbose, bool benchmark, bool limit) {
+    void execute(vector<Instruction>& code, bool verbose, bool benchmark, bool limit, int limit_amount) {
         map<string, GlobalVar> active_var_map;
         double memory[512];
 
@@ -55,8 +55,10 @@ namespace mily {
 
         string thingy =  "-------------------------------------------";
 
-        chrono::steady_clock::time_point begin = chrono::steady_clock::now();        
-        while ((limit ? iteration < 1000000 : true) && active) {
+        // time start
+        chrono::steady_clock::time_point begin = chrono::steady_clock::now();
+        
+        while ((limit ? iteration < limit_amount : true) && active) {
             Instruction instruction = code[counter];
             int instruction_id = instruction.id;
             vector<string> content = instruction.content;
@@ -79,7 +81,7 @@ namespace mily {
             execution_map[instruction_id](counter, MAX_LINE, active, printbuffer, content, active_var_map);
             iteration ++;
         }
-
+        // time end
         chrono::steady_clock::time_point end = chrono::steady_clock::now();
         double nanoseconds = chrono::duration_cast<chrono::microseconds>(end - begin).count();
         

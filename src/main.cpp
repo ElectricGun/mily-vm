@@ -12,7 +12,7 @@ using namespace mily;
 // TODO: make arg parsing better
 
 static const vector<string> single_flags {
-    "-v", "-bm", "--benchmark", "--limit"
+    "-v", "-bm", "--benchmark"
 };
 
 bool is_flag(string arg) {
@@ -67,6 +67,7 @@ int main(int argc, char* argv[]) {
     bool verbose = false;
     bool benchmark = false;
     bool limit = false;
+    int limit_amount = 0;
     for (auto& x : flags) {        
         // TODO: this is inefficient
         if (x.first == "-v") {
@@ -91,17 +92,18 @@ int main(int argc, char* argv[]) {
                 cerr << "Unexpected value after flag \"" << x.first << "\"" << endl;
                 exit(EXIT_FAILURE);
             }
-        } else if (x.first == "--limit") {
-            if (x.second == "0") {
-                limit = false;
-            
-            } else if (x.second == "1") {
+        } else if (x.first == "-l" || x.first == "--limit") {
+            if (is_numeric(x.second)) {
                 limit = true;
+                limit_amount = (int) stod(x.second);
 
             } else {
                 cerr << "Unexpected value after flag \"" << x.first << "\"" << endl;
                 exit(EXIT_FAILURE);
             }
+        } else {
+            cerr << "Unknown flag \"" << x.first << "\"" << endl;
+            exit(EXIT_FAILURE);
         }
     }
 
@@ -121,7 +123,7 @@ int main(int argc, char* argv[]) {
     //     cout << ins.line << ": " << ins.line << " " << out << endl;
     // }
 
-    execute(instructions, verbose, benchmark, limit);
+    execute(instructions, verbose, benchmark, limit, limit_amount);
 
     return 0;
 }
