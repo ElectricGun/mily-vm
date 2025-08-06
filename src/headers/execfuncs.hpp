@@ -27,5 +27,5 @@ namespace mily {
 
     void print_buffer(int& counter, vector<string>& line, string& printbuffer, map<string, ActiveVar>& active_var_map);
 
-    void forward(int& counter, int max_lines);
+    void forward(int& counter, int& max_lines);
 }

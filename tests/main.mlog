@@ -61,7 +61,7 @@ op add _test_0_callback @counter 1
 jump _test_0_start always
 set _test_0_returns_4 _test_0_returns
 set output _test_0_returns_4
-print "result: "
-print output
-printflush message1
+#print "result: "
+#print output
+#printflush message1
 end

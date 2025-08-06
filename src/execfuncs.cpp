@@ -182,7 +182,7 @@ namespace mily {
         }
     }
 
-    void forward(int& counter, int max_lines) {
+    void forward(int& counter, int& max_lines) {
         counter++;
         counter %= max_lines;
     }

@@ -11,34 +11,34 @@ using namespace mily;
 
 namespace mily {
 
-    static function<void(int&, int, bool&, string&, vector<string>&, map<string, ActiveVar>&)> execution_map[] {
-        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+    static function<void(int&, int&, bool&, string&, vector<string>&, map<string, ActiveVar>&)> execution_map[] {
+        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
             c = maxl;
             forward(c, maxl);
         }},
-        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
             jump(c, ls, avm);
         }},
-        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
             forward(c, maxl);
             set(c, ls, avm);
         }},
-        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
             forward(c, maxl);
             operate(c, ls, avm);
         }},
-        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
             a = false;
         }},
-        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
             forward(c, maxl);
             print_buffer(c, ls, pb, avm);
         }},
-        {[](int& c, int maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
+        {[](int& c, int& maxl, bool& a, string& pb, vector<string>& ls, map<string, ActiveVar>& avm){
             forward(c, maxl);
             // TODO: target doesnt do anything
             string& target = ls[0];
-            cout << pb << endl;
+            cout << target << ": " << pb << endl;
             pb = "";
         }}
     }; 
@@ -47,7 +47,7 @@ namespace mily {
         map<string, ActiveVar> active_var_map;
         double memory[512];
 
-        int const MAX_LINE = code.size();
+        int MAX_LINE = code.size();
         int counter = 0;
         int iteration = 0;
         bool active = true;
