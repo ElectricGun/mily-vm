@@ -51,7 +51,7 @@ namespace mily {
 
     void operate(int& counter, Instruction& instruction, map<string, ActiveVar>& active_var_map) {
         vector<Token>& line = instruction.content;
-        string& op = line[0].string_value;
+        int& op = line[0].int_value;
         string& overwrite = line[1].string_value;
 
         Token& left = line[2];

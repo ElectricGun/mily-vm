@@ -28,8 +28,8 @@ namespace mily {
         {COMPARE_LESS_THAN_EQUALS, Node{3}},
         {COMPARE_GREATER_THAN, Node{4}},
         {COMPARE_GREATER_THAN_EQUALS, Node{5}},
-        {COMPARE_STRICT_EQUALS, Node{6}}
-        
+        {COMPARE_STRICT_EQUALS, Node{6}},
+        {KEY_ALWAYS, Node{6}}        
     };
 
     static map<string, Node> operator_map = {
@@ -39,7 +39,6 @@ namespace mily {
         {OP_DIV,  Node{3}},
         {OP_IDIV, Node{4}},
         {OP_MOD,  Node{5}},
-        
     };
 
     static map<string, function<bool(double, double)>> double_compare_map {
@@ -60,18 +59,12 @@ namespace mily {
             [](double a, double b) {return a == b;}}
     };
 
-    static map<string, function<double(double, double)>> double_operation_map {
-        {OP_ADD, 
-            [](double a, double b) {return a + b;}},
-        {OP_MUL, 
-            [](double a, double b) {return a * b;}},
-        {OP_SUB, 
-            [](double a, double b) {return a - b;}},
-        {OP_DIV, 
-            [](double a, double b) {return a / b;}},
-        {OP_IDIV, 
-            [](double a, double b) {return floor(a / b);}},
-        {OP_MOD, 
-            [](double a, double b) {return fmod(a, b);}}
+    static function<double(double, double)> double_operation_map[] {
+        {[](double a, double b) {return a + b;}},
+        {[](double a, double b) {return a * b;}},
+        {[](double a, double b) {return a - b;}},
+        {[](double a, double b) {return a / b;}},
+        {[](double a, double b) {return floor(a / b);}},
+        {[](double a, double b) {return fmod(a, b);}}
     };
 }
