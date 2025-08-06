@@ -167,6 +167,11 @@ namespace mily {
                     token.int_value = stoi(word);
                     content.push_back(token);
                 
+                } else if (instruction_id == token_map[KEY_JUMP].value && j == 1) {
+                    token.type = TYPE_INT;
+                    token.int_value = comparison_map[word].value;
+                    content.push_back(token);
+                
                 } else if (instruction_id == token_map[KEY_OP].value && j == 0) {
                     token.type = TYPE_INT;
                     token.int_value = operator_map[word].value;

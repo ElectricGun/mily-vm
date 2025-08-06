@@ -29,7 +29,7 @@ namespace mily {
         {COMPARE_GREATER_THAN, Node{4}},
         {COMPARE_GREATER_THAN_EQUALS, Node{5}},
         {COMPARE_STRICT_EQUALS, Node{6}},
-        {KEY_ALWAYS, Node{6}}        
+        {KEY_ALWAYS, Node{MAP_VALUE_ALWAYS}}        
     };
 
     static map<string, Node> operator_map = {
@@ -41,22 +41,16 @@ namespace mily {
         {OP_MOD,  Node{5}},
     };
 
-    static map<string, function<bool(double, double)>> double_compare_map {
-        {COMPARE_OP_EQUALS, 
-            [](double a, double b) {return a == b;}},
-        {COMPARE_NOT_EQUAL, 
-            [](double a, double b) {return a != b;}},
-        {COMPARE_LESS_THAN, 
-            [](double a, double b) {return a < b;}},
-        {COMPARE_LESS_THAN_EQUALS, 
-            [](double a, double b) {return a <= b;}},
-        {COMPARE_GREATER_THAN, 
-            [](double a, double b) {return a > b;}},
-        {COMPARE_GREATER_THAN_EQUALS, 
-            [](double a, double b) {return a >= b;}},
+    static function<bool(double, double)> double_compare_map[] {
+        {[](double a, double b) {return a == b;}},
+        {[](double a, double b) {return a != b;}},
+        {[](double a, double b) {return a < b;}},
+        {[](double a, double b) {return a <= b;}},
+        {[](double a, double b) {return a > b;}},
+        {[](double a, double b) {return a >= b;}},
             // TODO: strict equals isnt different from equals
-        {COMPARE_STRICT_EQUALS, 
-            [](double a, double b) {return a == b;}}
+        {[](double a, double b) {return a == b;}},
+        {[](double a, double b) {return true;}}
     };
 
     static function<double(double, double)> double_operation_map[] {

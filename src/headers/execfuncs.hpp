@@ -8,7 +8,7 @@ using namespace std;
 
 namespace mily {
 
-    bool compare(ActiveVar& left, string& comparator, ActiveVar& right);
+    bool compare(ActiveVar& left, int& comparator, ActiveVar& right);
 
     ActiveVar parse_to_active_var(int& counter, Token& token, map<string, ActiveVar>& active_var_map);
 

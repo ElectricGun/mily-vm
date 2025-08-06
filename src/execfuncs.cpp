@@ -12,7 +12,7 @@ using namespace mily;
 
 namespace mily {
 
-    bool compare(ActiveVar& left, string& comparator, ActiveVar& right) {
+    bool compare(ActiveVar& left, int& comparator, ActiveVar& right) {
 
         // TODO: this makes it strictequal which might not be good
         if (left.type != right.type) {
@@ -87,9 +87,9 @@ namespace mily {
         vector<Token>& line = instruction.content;
 
         int target = line[0].int_value;
-        string& op = line[1].string_value;
+        int op = line[1].int_value;
 
-        if (op == KEY_ALWAYS) {
+        if (op == MAP_VALUE_ALWAYS) {
             counter = target;
             return;
         }
