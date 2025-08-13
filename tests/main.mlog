@@ -1,67 +1,91 @@
-# function: print_0
-jump print_0_end always
-print_0_start:
-print_0_end:
-# function: printflush_0
-jump printflush_0_end always
-printflush_0_start:
-printflush_0_end:
-# function: test_3
-jump test_3_end always
-test_3_start:
-  # function: test2_1
-  jump test2_1_end always
-  test2_1_start:
-    # function: test3_1
-    jump test3_1_end always
-    test3_1_start:
-      op add l_test3_return x x_
-      op add test3_1_returns l_test3_return x__
-      set @counter test3_1_callback
-    test3_1_end:
-    # call: test3_1
-    set x__ x
-    op add test3_1_callback @counter 1
-    jump test3_1_start always
-    set test3_1_returns_0 test3_1_returns
-    op add test2_1_returns test3_1_returns_0 x_
-    set @counter test2_1_callback
-  test2_1_end:
-  # call: test2_1
-  op add l_x x y
-  op add x_ l_x z
-  op add test2_1_callback @counter 1
-  jump test2_1_start always
-  set test2_1_returns_1 test2_1_returns
-  set test_3_returns test2_1_returns_1
-  set @counter test_3_callback
-test_3_end:
-# function: _test_0
-jump _test_0_end always
-_test_0_start:
-  # call: test_3
-  set x 3
-  set y 3
-  set z 3
-  op add test_3_callback @counter 1
-  jump test_3_start always
-  set test_3_returns_2 test_3_returns
-  # call: test_3
-  set x 1
-  set y 2
-  set z 3
-  op add test_3_callback @counter 1
-  jump test_3_start always
-  set test_3_returns_3 test_3_returns
-  op add _test_0_returns test_3_returns_2 test_3_returns_3
-  set @counter _test_0_callback
-_test_0_end:
-# call: _test_0
-op add _test_0_callback @counter 1
-jump _test_0_start always
-set _test_0_returns_4 _test_0_returns
-set output _test_0_returns_4
-print "result: "
-print output
+# function: test_int_int
+jump test_int_int_end always
+test_int_int_start:
+  op add test_int_int_returns x 1
+  set @counter test_int_int_callback
+test_int_int_end:
+set testa "among\"us\""
+# print:
+print testa
+# printflush:
 printflush message1
+set b 0
+set i 0
+for_loop_start_0:
+jump for_loop_end_0 greaterThanEq i 100
+  set j 0
+  for_loop_start_1:
+  op sub l_r_for 100 i
+  op add r_for l_r_for b
+  jump for_loop_end_1 greaterThanEq j r_for
+    set k j
+    while_loop_start_2:
+    jump while_loop_end_2 greaterThanEq k 100
+      op add k k 1
+      op add b b 1
+    jump while_loop_start_2 always
+    while_loop_end_2:
+  op add j j 1
+  jump for_loop_start_1 always
+  for_loop_end_1:
+op add i i 1
+jump for_loop_start_0 always
+for_loop_end_0:
+set n 1000
+set i 0
+set j 0
+while_loop_start_3:
+jump while_loop_end_3 greaterThanEq i n
+  op mod l_if i 2
+  jump branch_end_4 notEqual l_if 0
+    op add j j 1
+  branch_end_4:
+  op add i i 1
+jump while_loop_start_3 always
+while_loop_end_3:
+# function: test_int_int_int
+jump test_int_int_int_end always
+test_int_int_int_start:
+  # function: test2_int
+  jump test2_int_end always
+  test2_int_start:
+    # function: test3_int
+    jump test3_int_end always
+    test3_int_start:
+      op add l_test3_return x x_
+      op add test3_int_returns l_test3_return x__
+      set @counter test3_int_callback
+    test3_int_end:
+    set x__ x
+    # call: test3_int
+    op add test3_int_callback @counter 1
+    jump test3_int_start always
+    set test3_int_returns_5 test3_int_returns
+    op add test2_int_returns test3_int_returns_5 x_
+    set @counter test2_int_callback
+  test2_int_end:
+  op add l_arg_test2_0 x y
+  op add x_ l_arg_test2_0 z
+  # call: test2_int
+  op add test2_int_callback @counter 1
+  jump test2_int_start always
+  set test2_int_returns_6 test2_int_returns
+  set test_int_int_int_returns test2_int_returns_6
+  set @counter test_int_int_int_callback
+test_int_int_int_end:
+set x 3
+set y 3
+set z 3
+# call: test_int_int_int
+op add test_int_int_int_callback @counter 1
+jump test_int_int_int_start always
+set test_int_int_int_returns_7 test_int_int_int_returns
+set x 1
+set y 2
+set z 3
+# call: test_int_int_int
+op add test_int_int_int_callback @counter 1
+jump test_int_int_int_start always
+set test_int_int_int_returns_8 test_int_int_int_returns
+op add output test_int_int_int_returns_7 test_int_int_int_returns_8
 stop
