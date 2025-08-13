@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <map>
 #include <string>
 #include <vector>
@@ -51,7 +52,8 @@ namespace mily {
                 line_number ++;
             }    
         } else {
-            cerr << "Error opening file \"" << file_name << "\"";
+            cerr << "Error opening file \"" << file_name << "\"" << endl;
+            exit(EXIT_FAILURE);
         }
 
         return output;

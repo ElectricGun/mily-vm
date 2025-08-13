@@ -19,6 +19,7 @@ namespace mily {
 
         // puncs
         PUNC_SPEECH = "\"",
+        PUNC_ESCAPE = "\\",
 
         // vars
         VAR_COUNTER = "@counter",

@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <iostream>
+#include <ostream>
 #include <string>
 #include <vector>
 #include "headers/execfuncs.hpp"
@@ -143,6 +144,7 @@ namespace mily {
         string buffer;
         string target_var;
         string prev_str;
+        bool punc_escaped = false;
         // TODO: this can be improved to be more efficient
         for (int i = 0; i < input_str.length(); i++) {
             string str(1, input_str[i]);
@@ -164,7 +166,7 @@ namespace mily {
                     string_closed = true;
                 }
             } else {
-                if (str == "n" && prev_str == "\\") {
+                if (str == "n" && prev_str == PUNC_ESCAPE) {
                     buffer.pop_back();
                     buffer.push_back('\n');
                 } else {
@@ -174,6 +176,7 @@ namespace mily {
             prev_str = str;
             iterated = true;
         }
+
 
         if (string_started) {
             printbuffer.append(buffer);
