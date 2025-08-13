@@ -32,6 +32,8 @@ namespace mily {
     ActiveVar parse_to_active_var(int& counter, Token& token, map<string, ActiveVar>& active_var_map) {
         struct ActiveVar out;
 
+        // cout << token.type << " " << token.string_value << endl;
+
         if (token.type == TYPE_DOUBLE) {
             out.double_value = token.double_value;
             out.type = TYPE_DOUBLE;
@@ -126,11 +128,21 @@ namespace mily {
 
     void print_buffer(int& counter, Instruction& instruction, string& printbuffer, map<string, ActiveVar>& active_var_map) {
         vector<Token>& line = instruction.content;
+        Token tok = line[0];
 
         bool iterated = false;
         bool string_open = false;
         bool string_started = false;
         bool string_closed = false;
+
+        if (tok.type == TYPE_DOUBLE) {
+            printbuffer.append(to_string(tok.double_value));
+            return;
+
+        } else if (tok.type == TYPE_INT) {
+            printbuffer.append(to_string(tok.int_value  ));
+            return;
+        }
 
         string input_str;
         int size = line.size();

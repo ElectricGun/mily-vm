@@ -163,6 +163,7 @@ namespace mily {
             string word;
             while (line_stream >> word) {
                 struct Token token;
+
                 // assume first word is an int because its a jump
                 if (instruction_id == token_map[KEY_JUMP].value && j == 0) {
                     token.type = TYPE_INT;
