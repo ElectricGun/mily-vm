@@ -189,7 +189,6 @@ namespace mily {
             iterated = true;
         }
 
-
         if (string_started) {
             printbuffer.append(buffer);
         

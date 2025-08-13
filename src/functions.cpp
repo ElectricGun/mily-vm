@@ -16,7 +16,7 @@ namespace mily {
 
     bool is_numeric(string line) {
         char* p;
-        strtol(line.c_str(), &p, 10);
+        strtod(line.c_str(), &p);
         return *p == 0;
     }
 
@@ -163,6 +163,9 @@ namespace mily {
             string word;
             while (line_stream >> word) {
                 struct Token token;
+
+                // cout << word << endl;
+                // cout << (is_numeric(word) ? "true" : "false") << endl;
 
                 // assume first word is an int because its a jump
                 if (instruction_id == token_map[KEY_JUMP].value && j == 0) {
